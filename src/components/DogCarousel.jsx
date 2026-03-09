@@ -26,7 +26,7 @@ const DogCarousel = () => {
       );
       
       if (!response.ok) {
-        throw new Error('Mensaje de error personalizado: No se pudieron cargar los perros. Por favor, inténtalo de nuevo más tarde.');
+        throw new Error('Informacion no disponible en este momento. Por favor, intenta nuevamente más tarde.');
       }
       
       const data = await response.json();
