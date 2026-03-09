@@ -10,7 +10,7 @@ pr:
       - release
 
 pool:
-  vmImage: 'linux-selfhosted-4-demo'
+  name: 'linux-selfhosted-4-demo'
 
 variables:
   nodeVersion: '20.x'
