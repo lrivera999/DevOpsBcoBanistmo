@@ -38,7 +38,7 @@ stages:
             displayName: 'Install dependencies'
 
           - script: |
-              npm run lint --if-present
+              npm run lint
             workingDirectory: $(appFolder)
             displayName: 'Run linter'
 
@@ -58,7 +58,8 @@ stages:
               cliSources: '$(appFolder)'
               extraProperties: |
                 sonar.sourceEncoding=UTF-8
-                sonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/*.test.*,**/*.spec.*
+                sonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**
+                sonar.test.inclusions=**/*.test.*,**/*.spec.*
                 sonar.javascript.lcov.reportPaths=$(appFolder)/coverage/lcov.info
 
           - script: |
