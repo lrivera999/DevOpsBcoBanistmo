@@ -51,7 +51,7 @@ stages:
 
   - stage: Validate_Release
     displayName: 'Validate release with SonarQube'
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
+    condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
     jobs:
       - job: Lint_Test_Build_Sonar
         displayName: 'Lint, Test, Build and SonarQube'
@@ -106,7 +106,7 @@ stages:
   - stage: Deploy_Production
     displayName: 'Deploy to Azure Static Web Apps'
     dependsOn: Validate_Release
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
     jobs:
       - job: Deploy
         displayName: 'Deploy static site'
