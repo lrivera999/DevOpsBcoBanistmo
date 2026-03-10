@@ -11,75 +11,75 @@ pr:
       - release
 
 pool:
-  name: 'sonar-vm-pool'
+  name: "sonar-vm-pool"
 
 variables:
-  nodeVersion: '20.x'
-  appFolder: '.'
-  buildFolder: 'dist'
+  nodeVersion: "20.x"
+  appFolder: "."
+  buildFolder: "dist"
 
 stages:
   - stage: Validate_PR
-    displayName: 'Validate pull requests'
+    displayName: "Validate pull requests"
     condition: eq(variables['Build.Reason'], 'PullRequest')
     jobs:
       - job: Lint_Test_Build_PR
-        displayName: 'Lint, Test and Build (PR)'
+        displayName: "Lint, Test and Build (PR)"
         steps:
           - checkout: self
             fetchDepth: 0
 
           - task: NodeTool@0
-            displayName: 'Use Node.js'
+            displayName: "Use Node.js"
             inputs:
-              versionSpec: '$(nodeVersion)'
+              versionSpec: "$(nodeVersion)"
 
           - script: npm ci
             workingDirectory: $(appFolder)
-            displayName: 'Install dependencies'
+            displayName: "Install dependencies"
 
           - script: npm run lint
             workingDirectory: $(appFolder)
-            displayName: 'Run linter'
+            displayName: "Run linter"
 
           - script: npm run test:coverage
             workingDirectory: $(appFolder)
-            displayName: 'Run tests with coverage'
+            displayName: "Run tests with coverage"
 
           - script: npm run build
             workingDirectory: $(appFolder)
-            displayName: 'Build app'
+            displayName: "Build app"
 
   - stage: Validate_Main_With_Sonar
-    displayName: 'Validate main with SonarQube'
+    displayName: "Validate main with SonarQube"
     condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     jobs:
       - job: Lint_Test_Build_Sonar
-        displayName: 'Lint, Test, Build and SonarQube'
+        displayName: "Lint, Test, Build and SonarQube"
         steps:
           - checkout: self
             fetchDepth: 0
 
           - task: NodeTool@0
-            displayName: 'Use Node.js'
+            displayName: "Use Node.js"
             inputs:
-              versionSpec: '$(nodeVersion)'
+              versionSpec: "$(nodeVersion)"
 
           - script: npm ci
             workingDirectory: $(appFolder)
-            displayName: 'Install dependencies'
+            displayName: "Install dependencies"
 
           - script: npm run lint
             workingDirectory: $(appFolder)
-            displayName: 'Run linter'
+            displayName: "Run linter"
 
           - script: npm run test:coverage
             workingDirectory: $(appFolder)
-            displayName: 'Run tests with coverage'
+            displayName: "Run tests with coverage"
 
           - script: npm run build
             workingDirectory: $(appFolder)
-            displayName: 'Build app'
+            displayName: "Build app"
 
           - script: |
               sonar-scanner \
@@ -94,64 +94,65 @@ stages:
                 -Dsonar.host.url=$(SONAR_HOST_URL) \
                 -Dsonar.token=$(SONAR_TOKEN)
             workingDirectory: $(appFolder)
-            displayName: 'Run SonarScanner manually'
+            displayName: "Run SonarScanner manually"
 
   - stage: Validate_Release
-    displayName: 'Validate release'
+    displayName: "Validate release"
     condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
     jobs:
       - job: Lint_Test_Build_Release
-        displayName: 'Lint, Test and Build (release)'
+        displayName: "Lint, Test and Build (release)"
         steps:
           - checkout: self
             fetchDepth: 0
 
           - task: NodeTool@0
-            displayName: 'Use Node.js'
+            displayName: "Use Node.js"
             inputs:
-              versionSpec: '$(nodeVersion)'
+              versionSpec: "$(nodeVersion)"
 
           - script: npm ci
             workingDirectory: $(appFolder)
-            displayName: 'Install dependencies'
+            displayName: "Install dependencies"
 
           - script: npm run lint
             workingDirectory: $(appFolder)
-            displayName: 'Run linter'
+            displayName: "Run linter"
 
           - script: npm run test:coverage
             workingDirectory: $(appFolder)
-            displayName: 'Run tests with coverage'
+            displayName: "Run tests with coverage"
 
           - script: npm run build
             workingDirectory: $(appFolder)
-            displayName: 'Build app'
+            displayName: "Build app"
 
   - stage: Deploy_Production
-    displayName: 'Deploy to Azure Static Web Apps'
+    displayName: "Deploy to Azure Static Web Apps"
     dependsOn: Validate_Release
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
     jobs:
       - job: Deploy
-        displayName: 'Deploy static site'
+        displayName: "Deploy static site"
         steps:
           - checkout: self
+            fetchDepth: 0
 
           - task: NodeTool@0
-            displayName: 'Use Node.js'
+            displayName: "Use Node.js"
             inputs:
-              versionSpec: '$(nodeVersion)'
+              versionSpec: "$(nodeVersion)"
 
           - script: |
               npm ci
               npm run build
             workingDirectory: $(appFolder)
-            displayName: 'Build app for deployment'
+            displayName: "Build app for deployment"
 
           - task: AzureStaticWebApp@0
-            displayName: 'Deploy to Azure Static Web App'
+            displayName: "Deploy to Azure Static Web App"
             inputs:
-              app_location: '$(appFolder)/$(buildFolder)'
-              output_location: ''
+              app_location: "$(appFolder)/$(buildFolder)"
+              output_location: ""
               skip_app_build: true
-              azure_static_web_apps_api_token: '$(AZURE_STATIC_WEB_APPS_API_TOKEN)'
+              azure_static_web_apps_api_token: "$(AZURE_STATIC_WEB_APPS_API_TOKEN)"
