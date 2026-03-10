@@ -77,32 +77,24 @@ stages:
             workingDirectory: $(appFolder)
             displayName: 'Run tests with coverage'
 
-          - task: SonarQubePrepare@7
-            displayName: 'Prepare SonarQube analysis'
-            inputs:
-              SonarQube: 'sonarqube-service-connection'
-              scannerMode: 'cli'
-              configMode: 'manual'
-              cliProjectKey: 'dog-carousel'
-              cliProjectName: 'dog-carousel'
-              cliSources: '$(appFolder)'
-              extraProperties: |
-                sonar.sourceEncoding=UTF-8
-                sonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**
-                sonar.test.inclusions=**/*.test.*,**/*.spec.*
-                sonar.javascript.lcov.reportPaths=$(appFolder)/coverage/lcov.info
-
           - script: npm run build
             workingDirectory: $(appFolder)
             displayName: 'Build app'
 
-          - task: SonarQubeAnalyze@7
-            displayName: 'Run SonarQube analysis'
-
-          - task: SonarQubePublish@7
-            displayName: 'Publish quality gate'
-            inputs:
-              pollingTimeoutSec: '300'
+          - script: |
+              sonar-scanner \
+                -Dsonar.projectKey=dog-carousel \
+                -Dsonar.projectName=dog-carousel \
+                -Dsonar.sources=src \
+                -Dsonar.tests=src \
+                -Dsonar.test.inclusions=**/*.test.*,**/*.spec.* \
+                -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/** \
+                -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                -Dsonar.sourceEncoding=UTF-8 \
+                -Dsonar.host.url=$(SONAR_HOST_URL) \
+                -Dsonar.token=$(SONAR_TOKEN)
+            workingDirectory: $(appFolder)
+            displayName: 'Run SonarScanner manually'
 
   - stage: Validate_Release
     displayName: 'Validate release'
