@@ -324,7 +324,7 @@ const DogCarousel = () => {
             >
               <X className="h-6 w-6" />
             </button>
-            <h2 className="mb-4 text-2xl font-bold text-orange-600">⚠️ Sin datos de raza</h2>
+            <h2 className="mb-4 text-2xl font-bold text-orange-600">⚠️ Sin informacion</h2>
             <p className="mb-4 text-gray-600">
               Informacion no disponible desde la API publica.
             </p>
