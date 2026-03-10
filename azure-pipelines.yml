@@ -15,23 +15,20 @@ pool:
 
 variables:
   - group: dog-carousel-variables
-
   - name: nodeVersion
     value: "20.x"
-
   - name: appFolder
     value: "."
-
   - name: buildFolder
     value: "dist"
 
 stages:
-  - stage: Validate_PR
-    displayName: "Validate pull requests"
-    condition: eq(variables['Build.Reason'], 'PullRequest')
+  # Stage único para validación (se ejecuta siempre)
+  - stage: Validate
+    displayName: "Validate code"
     jobs:
-      - job: Lint_Test_Build_PR
-        displayName: "Lint, Test and Build (PR)"
+      - job: LintTestBuild
+        displayName: "Lint, test and build"
         steps:
           - checkout: self
             fetchDepth: 0
@@ -57,37 +54,7 @@ stages:
             workingDirectory: $(appFolder)
             displayName: "Build app"
 
-  - stage: Validate_Main_With_Sonar
-    displayName: "Validate main with SonarQube"
-    condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    jobs:
-      - job: Lint_Test_Build_Sonar
-        displayName: "Lint, Test, Build and SonarQube"
-        steps:
-          - checkout: self
-            fetchDepth: 0
-
-          - task: NodeTool@0
-            displayName: "Use Node.js"
-            inputs:
-              versionSpec: "$(nodeVersion)"
-
-          - script: npm ci
-            workingDirectory: $(appFolder)
-            displayName: "Install dependencies"
-
-          - script: npm run lint
-            workingDirectory: $(appFolder)
-            displayName: "Run linter"
-
-          - script: npm run test:coverage
-            workingDirectory: $(appFolder)
-            displayName: "Run tests with coverage"
-
-          - script: npm run build
-            workingDirectory: $(appFolder)
-            displayName: "Build app"
-
+          # SonarQube solo en main (push) y no en PR (para evitar análisis duplicados)
           - script: |
               sonar-scanner \
                 -Dsonar.projectKey=dog-carousel \
@@ -105,41 +72,12 @@ stages:
             env:
               SONAR_HOST_URL: $(SONAR_HOST_URL)
               SONAR_TOKEN: $(SONAR_TOKEN)
+            condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
 
-  - stage: Validate_Release
-    displayName: "Validate release"
-    condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
-    jobs:
-      - job: Lint_Test_Build_Release
-        displayName: "Lint, Test and Build (release)"
-        steps:
-          - checkout: self
-            fetchDepth: 0
-
-          - task: NodeTool@0
-            displayName: "Use Node.js"
-            inputs:
-              versionSpec: "$(nodeVersion)"
-
-          - script: npm ci
-            workingDirectory: $(appFolder)
-            displayName: "Install dependencies"
-
-          - script: npm run lint
-            workingDirectory: $(appFolder)
-            displayName: "Run linter"
-
-          - script: npm run test:coverage
-            workingDirectory: $(appFolder)
-            displayName: "Run tests with coverage"
-
-          - script: npm run build
-            workingDirectory: $(appFolder)
-            displayName: "Build app"
-
-  - stage: Deploy_Production
+  # Stage de despliegue solo para release (push)
+  - stage: Deploy
     displayName: "Deploy to Azure Static Web Apps"
-    dependsOn: Validate_Release
+    dependsOn: Validate
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
     jobs:
       - job: Deploy
