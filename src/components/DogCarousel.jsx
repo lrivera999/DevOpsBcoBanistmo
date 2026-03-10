@@ -12,10 +12,38 @@ const DogCarousel = () => {
   const API_KEY = import.meta.env.VITE_DOG_API_KEY || '';
 
   useEffect(() => {
-    fetchDogs();
-  }, []);
+    const fetchDogs = async () => {
+      try {
+        setLoading(true);
 
-  const fetchDogs = async () => {
+        if (API_KEY === '') {
+          console.warn('DOG API KEY no definida');
+        }
+
+        const response = await fetch(
+          `https://api.thedogapi.com/v1/images/search?limit=5&has_breeds=1&api_key=${API_KEY}`
+        );
+
+        if (!response.ok) {
+          throw new Error('Error al obtener los datos de los perros');
+        }
+
+        const data = await response.json();
+        setDogs(data);
+        setError(null);
+        setCurrentIndex(0);
+      } catch (err) {
+        setError(err.message || 'Ocurrió un error inesperado');
+        console.error('Error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDogs();
+  }, [API_KEY]);
+
+  const retryFetchDogs = async () => {
     try {
       setLoading(true);
 
@@ -84,7 +112,7 @@ const DogCarousel = () => {
         <div className="text-center">
           <p className="mb-4 font-semibold text-red-600">{error}</p>
           <button
-            onClick={fetchDogs}
+            onClick={retryFetchDogs}
             className="rounded-lg bg-orange-500 px-6 py-2 text-white transition hover:bg-orange-600"
           >
             Reintentar
