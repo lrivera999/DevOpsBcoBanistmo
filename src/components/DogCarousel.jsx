@@ -139,7 +139,7 @@ const DogCarousel = () => {
         <div className="mb-12 text-center">
           <h1 className="mb-3 text-5xl font-bold text-orange-600">🐕 Galería de Perros</h1>
           <p className="text-lg text-gray-600">
-            Descubre hermosos perros y haz clic para más detalles
+            Descubre hermosos perros y haz clic en el boton de mas informacion para conocer mas detalles de cada raza.
           </p>
         </div>
 
