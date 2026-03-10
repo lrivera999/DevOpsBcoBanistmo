@@ -265,7 +265,7 @@ const DogCarousel = () => {
 
                       {breed.life_span && (
                         <div className="bg-white p-4 rounded-lg">
-                          <p className="font-semibold text-gray-800 mb-2">🎂 Esperanza de vida</p>
+                          <p className="font-semibold text-gray-800 mb-2">🎂 Esperanza de vida x 4</p>
                           <p className="text-gray-600 text-sm">{breed.life_span}</p>
                         </div>
                       )}
