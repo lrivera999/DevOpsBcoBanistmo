@@ -125,7 +125,7 @@ const DogCarousel = () => {
   if (dogs.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
-        <p className="text-gray-600">No se encontraron perros</p>
+        <p className="text-gray-600">Informacion no disponible</p>
       </div>
     );
   }
