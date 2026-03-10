@@ -14,9 +14,16 @@ pool:
   name: "sonar-vm-pool"
 
 variables:
-  nodeVersion: "20.x"
-  appFolder: "."
-  buildFolder: "dist"
+  - group: dog-carousel-variables
+
+  - name: nodeVersion
+    value: "20.x"
+
+  - name: appFolder
+    value: "."
+
+  - name: buildFolder
+    value: "dist"
 
 stages:
   - stage: Validate_PR
