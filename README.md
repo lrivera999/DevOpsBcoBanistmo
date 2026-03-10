@@ -134,4 +134,4 @@ Este proyecto está preparado para ejecutarse en pipelines de CI utilizando **Gi
 
 ## 📄 Licencia
 
-Este proyecto es de uso educativo y para demostraciones técnicas.
+Este proyecto es de uso educativo y para demostraciones técnicas, fines educativos, demostrativos.
