@@ -326,7 +326,7 @@ const DogCarousel = () => {
             </button>
             <h2 className="mb-4 text-2xl font-bold text-orange-600">⚠️ Sin datos de raza</h2>
             <p className="mb-4 text-gray-600">
-              Esta imagen no tiene información de raza disponible en la API.
+              Informacion no disponible desde la API publica.
             </p>
             <pre className="mb-4 max-h-48 overflow-auto rounded bg-gray-100 p-4 text-xs">
               {JSON.stringify(selectedDog, null, 2)}
