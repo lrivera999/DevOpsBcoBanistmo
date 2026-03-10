@@ -91,10 +91,13 @@ stages:
                 -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/** \
                 -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
                 -Dsonar.sourceEncoding=UTF-8 \
-                -Dsonar.host.url=$(SONAR_HOST_URL) \
-                -Dsonar.token=$(SONAR_TOKEN)
+                -Dsonar.host.url="$SONAR_HOST_URL" \
+                -Dsonar.token="$SONAR_TOKEN"
             workingDirectory: $(appFolder)
             displayName: "Run SonarScanner manually"
+            env:
+              SONAR_HOST_URL: $(SONAR_HOST_URL)
+              SONAR_TOKEN: $(SONAR_TOKEN)
 
   - stage: Validate_Release
     displayName: "Validate release"
