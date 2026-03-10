@@ -56,7 +56,7 @@ const DogCarousel = () => {
       );
 
       if (!response.ok) {
-        throw new Error('Error al obtener los datos de los perros');
+        throw new Error('Informacion no disponible en este momento. Por favor, intenta nuevamente más tarde.');
       }
 
       const data = await response.json();
@@ -281,9 +281,9 @@ const DogCarousel = () => {
                       )}
 
                       {breed.life_span && (
-                        <div className="rounded-lg bg-white p-4">
-                          <p className="mb-2 font-semibold text-gray-800">🎂 Esperanza de vida</p>
-                          <p className="text-sm text-gray-600">{breed.life_span}</p>
+                        <div className="bg-white p-4 rounded-lg">
+                          <p className="font-semibold text-gray-800 mb-2">🎂 Esperanza de vida x 4</p>
+                          <p className="text-gray-600 text-sm">{breed.life_span}</p>
                         </div>
                       )}
 
