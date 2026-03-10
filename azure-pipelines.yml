@@ -11,7 +11,7 @@ pr:
       - release
 
 pool:
-  name: 'linux-selfhosted-4-demo'
+  name: 'sonar-vm-pool'
 
 variables:
   nodeVersion: '20.x'
