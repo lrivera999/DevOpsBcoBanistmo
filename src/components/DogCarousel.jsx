@@ -125,7 +125,7 @@ const DogCarousel = () => {
   if (dogs.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
-        <p className="text-gray-600">No se encontraron perros</p>
+        <p className="text-gray-600">Informacion no disponible por el momento</p>
       </div>
     );
   }
@@ -139,7 +139,7 @@ const DogCarousel = () => {
         <div className="mb-12 text-center">
           <h1 className="mb-3 text-5xl font-bold text-orange-600">🐕 Galería de Perros</h1>
           <p className="text-lg text-gray-600">
-            Descubre hermosos perros y haz clic para más detalles
+            Descubre hermosos perros y haz clic en el boton de mas informacion para conocer mas detalles de cada raza.
           </p>
         </div>
 
